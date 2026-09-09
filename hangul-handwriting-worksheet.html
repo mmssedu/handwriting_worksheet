@@ -1,0 +1,1286 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>한글 글씨체 연습 학습지 제작기</title>
+  <style>
+    :root {
+      --ink: #1f2933;
+      --muted: #657080;
+      --line: #d6dce5;
+      --soft-line: #edf1f6;
+      --paper: #ffffff;
+      --app-bg: #f3f6f8;
+      --panel: #ffffff;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --accent-soft: #dbeafe;
+      --danger: #b42318;
+      --shadow: 0 16px 45px rgba(31, 41, 55, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--app-bg);
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+    }
+
+    .sidebar {
+      padding: 22px;
+      background: #f9fbfd;
+      border-right: 1px solid var(--line);
+      overflow: auto;
+    }
+
+    .main {
+      padding: 24px;
+      overflow: auto;
+    }
+
+    .brand {
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 23px;
+      line-height: 1.25;
+      letter-spacing: 0;
+      font-weight: 700;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .panel-title {
+      margin: 0 0 12px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    label,
+    .label {
+      display: block;
+      margin-bottom: 6px;
+      color: #344054;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #c8d0dc;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink);
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 165px;
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .choice {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      border: 1px solid #c8d0dc;
+      border-radius: 7px;
+      background: #fff;
+      color: #344054;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .choice input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .choice:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #12377b;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #344054;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .checkbox-row input {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--accent);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 38px;
+      border: 1px solid #c8d0dc;
+      border-radius: 7px;
+      background: #fff;
+      color: #1f2937;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #f5f8fc;
+    }
+
+    .btn.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn.primary:hover {
+      background: var(--accent-dark);
+    }
+
+    .btn.ghost {
+      border-color: transparent;
+      background: transparent;
+      color: var(--accent-dark);
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .preset {
+      text-align: left;
+      min-height: 50px;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 2px;
+      line-height: 1.35;
+    }
+
+    .preset small {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .preset.full {
+      grid-column: 1 / -1;
+    }
+
+    .status {
+      min-height: 20px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .status.error {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .preview-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 auto 14px;
+      max-width: 210mm;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .paper-wrap {
+      display: flex;
+      justify-content: center;
+      padding-bottom: 32px;
+    }
+
+    .worksheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      color: #111827;
+      padding: 16mm 15mm;
+    }
+
+    .sheet-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: end;
+      padding-bottom: 7mm;
+      border-bottom: 2px solid #202938;
+      margin-bottom: 8mm;
+    }
+
+    .sheet-title {
+      font-size: 23px;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .sheet-meta {
+      display: grid;
+      grid-template-columns: auto 34mm;
+      gap: 4mm 3mm;
+      align-items: end;
+      font-size: 12px;
+      color: #4b5563;
+      white-space: nowrap;
+    }
+
+    .meta-line {
+      border-bottom: 1px solid #9aa4b2;
+      height: 20px;
+    }
+
+    .sheet-note {
+      margin: -3mm 0 5mm;
+      color: #4b5563;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .practice-block {
+      break-inside: avoid;
+      margin-bottom: 6mm;
+    }
+
+    .practice-label {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 2.5mm;
+      font-size: 12px;
+      color: #4b5563;
+      font-weight: 700;
+    }
+
+    .letter-grid {
+      display: grid;
+      gap: 0;
+      width: 100%;
+      max-width: 100%;
+      border-top: 1px solid #98a2b3;
+      border-left: 1px solid #98a2b3;
+    }
+
+    .cell {
+      position: relative;
+      width: 100%;
+      min-height: 0;
+      min-width: 0;
+      aspect-ratio: 1 / 1;
+      border-right: 1px solid #98a2b3;
+      border-bottom: 1px solid #98a2b3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .cell::before,
+    .cell::after {
+      content: "";
+      position: absolute;
+      background: #e5e7eb;
+      pointer-events: none;
+    }
+
+    .cell::before {
+      width: 100%;
+      height: 1px;
+      top: 50%;
+      left: 0;
+    }
+
+    .cell::after {
+      width: 1px;
+      height: 100%;
+      left: 50%;
+      top: 0;
+    }
+
+    .char {
+      position: relative;
+      z-index: 1;
+      color: rgba(17, 24, 39, var(--trace-opacity));
+      font-family: var(--practice-font);
+      font-weight: var(--practice-weight);
+      font-size: var(--grid-char-size);
+      letter-spacing: 0;
+      line-height: 1;
+      transform: translateY(-0.02em);
+    }
+
+    .char.mark {
+      position: absolute;
+      font-size: calc(var(--grid-char-size) * 0.62);
+      line-height: 1;
+      transform: none;
+    }
+
+    .char.mark-low-left {
+      left: 18%;
+      bottom: 12%;
+    }
+
+    .char.mark-center {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: calc(var(--grid-char-size) * 0.76);
+    }
+
+    .char.mark-open-quote {
+      left: 16%;
+      top: 10%;
+      font-size: calc(var(--grid-char-size) * 0.74);
+    }
+
+    .char.mark-close-quote {
+      right: 16%;
+      top: 10%;
+      font-size: calc(var(--grid-char-size) * 0.74);
+    }
+
+    .line-practice {
+      border-top: 1px solid #98a2b3;
+    }
+
+    .ruled-row {
+      min-height: var(--line-height);
+      border-bottom: 1px solid #98a2b3;
+      background:
+        linear-gradient(to bottom, transparent calc(50% - 0.5px), #e5e7eb calc(50% - 0.5px), #e5e7eb calc(50% + 0.5px), transparent calc(50% + 0.5px));
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 0 2mm;
+    }
+
+    .ruled-row .char {
+      line-height: 1.15;
+    }
+
+    .copy-row {
+      color: rgba(17, 24, 39, var(--trace-opacity));
+      font-family: var(--practice-font);
+      font-weight: var(--practice-weight);
+      font-size: var(--line-copy-size, var(--line-char-size));
+      white-space: nowrap;
+    }
+
+    .free-writing-prompt {
+      margin: 0 0 2.5mm;
+      color: #4b5563;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .free-writing-options[hidden] {
+      display: none;
+    }
+
+    .blank-hint {
+      color: transparent;
+      user-select: none;
+    }
+
+    .footer-tip {
+      margin-top: 8mm;
+      padding-top: 4mm;
+      border-top: 1px solid #d0d5dd;
+      color: #667085;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .empty-preview {
+      min-height: 190mm;
+      display: grid;
+      place-items: center;
+      color: #667085;
+      text-align: center;
+      border: 1px dashed #b8c1cf;
+    }
+
+    @media (max-width: 980px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .worksheet {
+        width: 100%;
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .sidebar,
+      .main {
+        padding: 16px;
+      }
+
+      .two-col,
+      .three-col,
+      .preset-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .segmented {
+        grid-template-columns: 1fr;
+      }
+
+      .sheet-header {
+        grid-template-columns: 1fr;
+      }
+
+      .sheet-meta {
+        grid-template-columns: auto 1fr;
+      }
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    @media print {
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+      }
+
+      .sidebar,
+      .preview-toolbar {
+        display: none !important;
+      }
+
+      .app-shell,
+      .main,
+      .paper-wrap {
+        display: block;
+        padding: 0;
+        overflow: visible;
+      }
+
+      .worksheet {
+        width: 210mm;
+        min-height: auto;
+        box-shadow: none;
+        padding: 16mm 15mm 14mm;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+      }
+
+      .practice-block {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="학습지 설정">
+      <div class="brand">
+        <h1>한글 글씨체 연습 학습지 제작기</h1>
+        <p class="lead">학생 수준에 맞는 단어와 문장을 넣고, 따라쓰기와 빈칸 연습을 섞어 A4 학습지로 인쇄하세요.</p>
+      </div>
+
+      <section class="panel">
+        <h2 class="panel-title">기본 정보</h2>
+        <div class="field">
+          <label for="sheetTitle">학습지 제목</label>
+          <input id="sheetTitle" type="text" value="바르게 쓰는 한글 글씨 연습">
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <label for="className">반 / 번호</label>
+            <input id="className" type="text" placeholder="예: 2학년 3반">
+          </div>
+          <div class="field">
+            <label for="studentName">이름</label>
+            <input id="studentName" type="text" placeholder="이름">
+          </div>
+        </div>
+        <div class="field">
+          <label for="teacherNote">상단 안내 문구</label>
+          <input id="teacherNote" type="text" value="천천히, 획의 시작과 끝을 살피며 또박또박 써 봅시다.">
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">연습할 내용</h2>
+        <div class="field">
+          <label for="practiceText">한 줄에 하나씩 입력</label>
+          <textarea id="practiceText">안녕하세요
+감사합니다
+괜찮습니다
+학교생활
+책임감 있는 태도
+오늘 배운 내용을 바르게 정리합니다.</textarea>
+        </div>
+        <div class="preset-grid" aria-label="예시 내용 넣기">
+          <button class="btn preset" type="button" data-preset="basic">기본 자모 <small>자주 헷갈리는 받침</small></button>
+          <button class="btn preset" type="button" data-preset="spacing">바른 글씨 <small>또박또박 써야 하는 이유</small></button>
+          <button class="btn preset full" id="randomBtn" type="button">랜덤 좋은 문장 <small>시·명언·노랫말 느낌의 창작 문장</small></button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">학습지 모양</h2>
+        <div class="field">
+          <span class="label">연습 방식</span>
+          <div class="segmented">
+            <label class="choice"><input type="radio" name="mode" value="grid" checked>칸 쓰기</label>
+            <label class="choice"><input type="radio" name="mode" value="line">줄 쓰기</label>
+            <label class="choice"><input type="radio" name="mode" value="mixed">섞어서</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="fontChoice">글씨체</label>
+          <select id="fontChoice">
+            <option value="gothic">기본 고딕</option>
+            <option value="batang">바탕체</option>
+            <option value="gungseo">궁서체</option>
+            <option value="serif">명조 느낌</option>
+          </select>
+        </div>
+        <div class="three-col">
+          <div class="field">
+            <label for="repeatCount">따라쓰기 횟수</label>
+            <input id="repeatCount" type="number" min="1" max="8" value="3">
+          </div>
+          <div class="field">
+            <label for="blankCount">빈 연습 줄</label>
+            <input id="blankCount" type="number" min="0" max="10" value="3">
+          </div>
+          <div class="field">
+            <label for="maxBlocks">문항 수</label>
+            <input id="maxBlocks" type="number" min="1" max="18" value="8">
+          </div>
+        </div>
+        <div class="field">
+          <label for="opacityRange">따라쓰기 농도 <span id="opacityValue">28</span>%</label>
+          <input id="opacityRange" type="range" min="8" max="55" value="28">
+        </div>
+        <div class="field">
+          <label class="checkbox-row">
+            <input id="showFooter" type="checkbox" checked>
+            아래쪽에 자기점검 문구 넣기
+          </label>
+        </div>
+        <div class="field">
+          <label class="checkbox-row">
+            <input id="freeWriting" type="checkbox">
+            자유 문장 쓰기
+          </label>
+        </div>
+        <div id="freeWritingOptions" class="field free-writing-options" hidden>
+          <label for="freeWritingRows">자유 문장 줄 수</label>
+          <input id="freeWritingRows" type="number" min="2" max="12" value="2" disabled>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">출력</h2>
+        <div class="button-row">
+          <button id="printBtn" class="btn primary" type="button">인쇄하기</button>
+          <button id="clearBtn" class="btn ghost" type="button">내용 비우기</button>
+        </div>
+        <p id="status" class="status" aria-live="polite"></p>
+      </section>
+    </aside>
+
+    <main class="main">
+      <div class="preview-toolbar">
+        <span id="previewSummary">A4 1쪽 미리보기</span>
+        <span>인쇄 시 왼쪽 설정 패널은 제외됩니다.</span>
+      </div>
+      <div class="paper-wrap">
+        <section id="worksheet" class="worksheet" aria-label="학습지 미리보기"></section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const presets = {
+      basic: [
+        "ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ",
+        "ㅏ ㅑ ㅓ ㅕ ㅗ ㅛ ㅜ ㅠ ㅡ ㅣ",
+        "각 간 갈 감 갑 값 갔 강",
+        "읽다 앉다 없다 많다 괜찮다",
+        "받침을 끝까지 또렷하게 씁니다."
+      ],
+      spacing: [
+        "바른 글씨는 생각을 정확하게 전하게 한다.",
+        "또박또박 쓴 글은 읽는 사람을 배려하는 마음이다.",
+        "글자의 크기와 간격이 고르면 내용이 더 잘 보인다.",
+        "천천히 쓰는 습관은 실수를 줄여 준다.",
+        "받침과 모음을 분명하게 쓰면 뜻이 헷갈리지 않는다.",
+        "정돈된 글씨는 나의 배움을 오래 남긴다."
+      ]
+    };
+
+    const randomPhrases = [
+      "오늘의 작은 성실함이 내일의 나를 만든다.",
+      "천천히 걸어도 방향을 잃지 않으면 충분하다.",
+      "말은 짧게, 마음은 따뜻하게 전한다.",
+      "햇빛이 닿는 곳마다 새로운 시작이 생긴다.",
+      "나는 나의 속도로 분명하게 자란다.",
+      "흔들리는 날에도 다시 한 줄을 쓴다.",
+      "바른 글씨는 생각을 천천히 정리하게 한다.",
+      "좋은 습관은 조용히 쌓여 힘이 된다.",
+      "실수는 다시 쓰는 연습의 시작이다.",
+      "하늘은 멀어도 오늘의 걸음은 가까이에 있다.",
+      "작은 불빛도 어두운 길을 밝혀 준다.",
+      "친절한 말 한마디가 하루의 모양을 바꾼다.",
+      "지금 적는 한 문장이 나를 단단하게 한다.",
+      "바람처럼 가볍게, 마음은 곧게.",
+      "내일의 웃음을 위해 오늘을 정돈한다.",
+      "배움은 천천히 깊어지는 물결이다.",
+      "넘어진 자리에서 다시 이름을 써 본다.",
+      "조용한 노력은 언젠가 분명한 힘이 된다.",
+      "마음을 바르게 세우면 글씨도 차분해진다.",
+      "한 글자씩 또박또박 나의 생각을 세운다.",
+      "오늘을 정성껏 쓰면 내일이 조금 환해진다.",
+      "서두르지 않아도 괜찮다, 분명히 나아가고 있다.",
+      "좋은 말은 듣는 사람의 마음에 오래 머문다.",
+      "나를 믿는 마음으로 첫 줄을 시작한다."
+    ];
+
+    const dom = {
+      sheetTitle: document.getElementById("sheetTitle"),
+      className: document.getElementById("className"),
+      studentName: document.getElementById("studentName"),
+      teacherNote: document.getElementById("teacherNote"),
+      practiceText: document.getElementById("practiceText"),
+      fontChoice: document.getElementById("fontChoice"),
+      repeatCount: document.getElementById("repeatCount"),
+      blankCount: document.getElementById("blankCount"),
+      maxBlocks: document.getElementById("maxBlocks"),
+      opacityRange: document.getElementById("opacityRange"),
+      opacityValue: document.getElementById("opacityValue"),
+      showFooter: document.getElementById("showFooter"),
+      freeWriting: document.getElementById("freeWriting"),
+      freeWritingRows: document.getElementById("freeWritingRows"),
+      freeWritingOptions: document.getElementById("freeWritingOptions"),
+      worksheet: document.getElementById("worksheet"),
+      status: document.getElementById("status"),
+      previewSummary: document.getElementById("previewSummary"),
+      printBtn: document.getElementById("printBtn"),
+      clearBtn: document.getElementById("clearBtn"),
+      randomBtn: document.getElementById("randomBtn")
+    };
+
+    const fontMap = {
+      gothic: '"Malgun Gothic", "Apple SD Gothic Neo", sans-serif',
+      batang: 'Batang, "AppleMyungjo", serif',
+      gungseo: 'Gungsuh, "궁서", serif',
+      serif: '"Noto Serif CJK KR", "Nanum Myeongjo", Batang, serif'
+    };
+
+    const MAX_GRID_COLUMNS = 15;
+    const MAX_LINE_COLUMNS = 24;
+    const PRINTABLE_WIDTH_MM = 180;
+    const LINE_HEIGHT_MM = 15;
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function clampNumber(value, min, max, fallback) {
+      const parsed = Number(value);
+      if (!Number.isFinite(parsed)) return fallback;
+      return Math.min(max, Math.max(min, Math.round(parsed)));
+    }
+
+    function getMode() {
+      return document.querySelector('input[name="mode"]:checked').value;
+    }
+
+    function getLines() {
+      return dom.practiceText.value
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean);
+    }
+
+    function normalizeSettings() {
+      dom.repeatCount.value = clampNumber(dom.repeatCount.value, 1, 8, 3);
+      dom.blankCount.value = clampNumber(dom.blankCount.value, 0, 10, 3);
+      dom.maxBlocks.value = clampNumber(dom.maxBlocks.value, 1, 18, 8);
+      dom.freeWritingRows.value = clampNumber(dom.freeWritingRows.value, 2, 12, 2);
+      dom.freeWritingRows.disabled = !dom.freeWriting.checked;
+      dom.freeWritingOptions.hidden = !dom.freeWriting.checked;
+      dom.opacityValue.textContent = dom.opacityRange.value;
+    }
+
+    function makeHeader() {
+      const today = new Date();
+      const dateText = today.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+      const title = escapeHtml(dom.sheetTitle.value.trim() || "한글 글씨 연습");
+      const className = escapeHtml(dom.className.value.trim());
+      const studentName = escapeHtml(dom.studentName.value.trim());
+      const note = escapeHtml(dom.teacherNote.value.trim());
+
+      return `
+        <header class="sheet-header">
+          <div class="sheet-title">${title}</div>
+          <div class="sheet-meta" aria-label="학생 정보">
+            <span>학반</span><span class="meta-line">${className}</span>
+            <span>이름</span><span class="meta-line">${studentName}</span>
+            <span>날짜</span><span class="meta-line">${escapeHtml(dateText)}</span>
+          </div>
+        </header>
+        ${note ? `<p class="sheet-note">${note}</p>` : ""}
+      `;
+    }
+
+    function splitIntoChars(text) {
+      const chars = Array.from(text.replace(/\s+/g, " "));
+      let doubleQuoteOpen = true;
+      let singleQuoteOpen = true;
+
+      return chars.map(char => {
+        if (char === '"') {
+          const mark = doubleQuoteOpen ? "“" : "”";
+          doubleQuoteOpen = !doubleQuoteOpen;
+          return mark;
+        }
+        if (char === "'") {
+          const mark = singleQuoteOpen ? "‘" : "’";
+          singleQuoteOpen = !singleQuoteOpen;
+          return mark;
+        }
+        return char;
+      });
+    }
+
+    function trimEdgeSpaces(units) {
+      const result = [...units];
+      while (result[0] === " ") result.shift();
+      while (result[result.length - 1] === " ") result.pop();
+      return result;
+    }
+
+    function splitIntoWords(text) {
+      const normalized = splitIntoChars(text.trim()).join("");
+      const words = normalized.split(" ").filter(Boolean);
+      const merged = [];
+
+      words.forEach(word => {
+        if (/^[.,，．、。!?！？:;：；”’」』》〉\)\]\}]+$/.test(word) && merged.length) {
+          merged[merged.length - 1] += word;
+        } else {
+          merged.push(word);
+        }
+      });
+
+      return merged;
+    }
+
+    function getWordLength(word) {
+      return Array.from(word).length;
+    }
+
+    function getLineLength(words, start, end) {
+      let length = 0;
+      for (let i = start; i <= end; i += 1) {
+        length += getWordLength(words[i]);
+      }
+      return length + Math.max(0, end - start);
+    }
+
+    function comparePartition(a, b) {
+      if (!b) return a;
+      const score = item => {
+        const maxLength = Math.max(...item.lengths);
+        const totalSlack = item.lengths.reduce((sum, length) => sum + maxLength - length, 0);
+        const raggedness = item.lengths.reduce((sum, length) => sum + Math.pow(maxLength - length, 2), 0);
+        return [maxLength, totalSlack, raggedness];
+      };
+      const aScore = score(a);
+      const bScore = score(b);
+      for (let i = 0; i < aScore.length; i += 1) {
+        if (aScore[i] < bScore[i]) return a;
+        if (aScore[i] > bScore[i]) return b;
+      }
+      return a;
+    }
+
+    function findBestWordPartition(words, rowCount, maxColumns) {
+      const memo = new Map();
+
+      function solve(start, rowsLeft) {
+        const key = `${start}:${rowsLeft}`;
+        if (memo.has(key)) return memo.get(key);
+        if (rowsLeft === 0) return start === words.length ? { groups: [], lengths: [] } : null;
+        if (words.length - start < rowsLeft) return null;
+
+        let best = null;
+        const lastEnd = words.length - rowsLeft;
+        for (let end = start; end <= lastEnd; end += 1) {
+          const length = getLineLength(words, start, end);
+          if (length > maxColumns) break;
+          const rest = solve(end + 1, rowsLeft - 1);
+          if (!rest) continue;
+          const candidate = {
+            groups: [words.slice(start, end + 1), ...rest.groups],
+            lengths: [length, ...rest.lengths]
+          };
+          best = comparePartition(candidate, best);
+        }
+
+        memo.set(key, best);
+        return best;
+      }
+
+      return solve(0, rowCount);
+    }
+
+    function chunkUnits(text, maxColumns) {
+      const units = splitIntoChars(text.trim());
+      const chunks = [];
+      let start = 0;
+
+      while (start < units.length) {
+        let end = Math.min(start + maxColumns, units.length);
+        if (end < units.length) {
+          let breakIndex = -1;
+          for (let i = end - 1; i > start + 3; i -= 1) {
+            if (units[i] === " ") {
+              breakIndex = i;
+              break;
+            }
+          }
+          if (breakIndex !== -1) end = breakIndex;
+        }
+
+        const chunk = units.slice(start, end);
+        while (chunk[0] === " ") chunk.shift();
+        while (chunk[chunk.length - 1] === " ") chunk.pop();
+        if (chunk.length) chunks.push(chunk);
+
+        start = end;
+        while (units[start] === " ") start += 1;
+      }
+
+      return chunks.length ? chunks : [[]];
+    }
+
+    function makeBalancedChunks(text, maxColumns) {
+      const words = splitIntoWords(text);
+      if (words.length === 0) return { chunks: [[]], columns: 1 };
+      if (words.some(word => getWordLength(word) > maxColumns)) {
+        const fallback = chunkUnits(text, maxColumns);
+        const columns = Math.min(maxColumns, Math.max(1, ...fallback.map(chunk => chunk.length)));
+        return { chunks: fallback, columns };
+      }
+
+      const fullLength = getLineLength(words, 0, words.length - 1);
+      const minRows = Math.max(1, Math.ceil(fullLength / maxColumns));
+      let partition = null;
+
+      for (let rows = minRows; rows <= words.length; rows += 1) {
+        partition = findBestWordPartition(words, rows, maxColumns);
+        if (partition) break;
+      }
+
+      if (!partition) {
+        const fallback = chunkUnits(text, maxColumns);
+        const columns = Math.min(maxColumns, Math.max(1, ...fallback.map(chunk => chunk.length)));
+        return { chunks: fallback, columns };
+      }
+
+      const chunks = partition.groups.map(group => Array.from(group.join(" ")));
+      const columns = Math.min(maxColumns, Math.max(1, ...partition.lengths));
+      return { chunks, columns };
+    }
+
+    function shouldStayWithPrevious(char) {
+      return /[.,，．、。!?！？:;：；”’」』》〉\)\]\}]/.test(char);
+    }
+
+    function getMarkClass(char, token, index) {
+      if (/[.,，．、。]/.test(char)) return "mark mark-low-left";
+      if (/[!?！？:;：；]/.test(char)) return "mark mark-center";
+      if (/[“‘「『《〈\(\[\{]/.test(char)) return "mark mark-open-quote";
+      if (/[”’」』》〉\)\]\}]/.test(char)) return "mark mark-close-quote";
+      if (char === '"' || char === "'") {
+        return index === 0 ? "mark mark-open-quote" : "mark mark-close-quote";
+      }
+      return "";
+    }
+
+    function makeCellContent(token, traced) {
+      if (!traced || !token || token === " ") {
+        return '<span class="blank-hint">가</span>';
+      }
+
+      return Array.from(token).map((char, index) => {
+        const markClass = getMarkClass(char, token, index);
+        const className = markClass ? `char ${markClass}` : "char";
+        return `<span class="${className}">${escapeHtml(char)}</span>`;
+      }).join("");
+    }
+
+    function makeCells(chars, columns, traced) {
+      const cells = [];
+      for (let i = 0; i < columns; i += 1) {
+        const content = makeCellContent(chars[i] || "", traced);
+        cells.push(`<div class="cell">${content}</div>`);
+      }
+      return cells.join("");
+    }
+
+    function pickRandomLines(count) {
+      const pool = [...randomPhrases];
+      for (let i = pool.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      return pool.slice(0, count);
+    }
+
+    function makeGridBlock(text, index, settings) {
+      const balanced = makeBalancedChunks(text, MAX_GRID_COLUMNS);
+      const chunks = balanced.chunks;
+      const columns = balanced.columns;
+      const cellSize = PRINTABLE_WIDTH_MM / columns;
+      const gridStyle = [
+        `--grid-char-size: ${(cellSize * 0.8).toFixed(1)}mm`,
+        `grid-template-columns: repeat(${columns}, 1fr)`
+      ].join("; ");
+      const rows = [];
+
+      for (let repeat = 0; repeat < settings.repeatCount; repeat += 1) {
+        chunks.forEach(chunk => {
+          rows.push(makeCells(chunk, columns, true));
+        });
+      }
+
+      for (let i = 0; i < settings.blankCount; i += 1) {
+        chunks.forEach(() => {
+          rows.push(makeCells([], columns, false));
+        });
+      }
+
+      return `
+        <section class="practice-block">
+          <div class="practice-label">
+            <span>${index + 1}. ${escapeHtml(text)}</span>
+          </div>
+          <div class="letter-grid" style="${gridStyle}">
+            ${rows.join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function makeLineBlock(text, index, settings) {
+      const rows = [];
+      const balanced = makeBalancedChunks(text, MAX_LINE_COLUMNS);
+      const chunks = balanced.chunks.map(chunk => chunk.join(""));
+      const copySize = Math.min(10.2, Math.max(6.8, (PRINTABLE_WIDTH_MM / balanced.columns) * 0.8));
+
+      for (let repeat = 0; repeat < settings.repeatCount; repeat += 1) {
+        chunks.forEach(chunk => {
+          rows.push(`
+            <div class="ruled-row">
+              <span class="copy-row" style="--line-copy-size: ${copySize.toFixed(1)}mm">${escapeHtml(chunk)}</span>
+            </div>
+          `);
+        });
+      }
+
+      for (let i = 0; i < settings.blankCount * chunks.length; i += 1) {
+        rows.push('<div class="ruled-row"><span class="blank-hint">연습</span></div>');
+      }
+
+      return `
+        <section class="practice-block">
+          <div class="practice-label">
+            <span>${index + 1}. ${escapeHtml(text)}</span>
+          </div>
+          <div class="line-practice">${rows.join("")}</div>
+        </section>
+      `;
+    }
+
+    function makeFreeWritingBlock(mode, rowCount) {
+      if (mode === "grid") {
+        const rows = [];
+        const columns = MAX_GRID_COLUMNS;
+        const cellSize = PRINTABLE_WIDTH_MM / columns;
+        const gridStyle = [
+          `--grid-char-size: ${(cellSize * 0.8).toFixed(1)}mm`,
+          `grid-template-columns: repeat(${columns}, 1fr)`
+        ].join("; ");
+
+        for (let i = 0; i < rowCount; i += 1) {
+          rows.push(makeCells([], columns, false));
+        }
+
+        return `
+          <section class="practice-block">
+            <div class="practice-label">
+              <span>자유 문장 쓰기</span>
+            </div>
+            <p class="free-writing-prompt">쓰고 싶은 하나의 문장을 자유롭게 써 봅시다.</p>
+            <div class="letter-grid" style="${gridStyle}">
+              ${rows.join("")}
+            </div>
+          </section>
+        `;
+      }
+
+      const rows = [];
+      for (let i = 0; i < rowCount; i += 1) {
+        rows.push('<div class="ruled-row"><span class="blank-hint">자유 문장</span></div>');
+      }
+
+      return `
+        <section class="practice-block">
+          <div class="practice-label">
+            <span>자유 문장 쓰기</span>
+          </div>
+          <p class="free-writing-prompt">쓰고 싶은 하나의 문장을 자유롭게 써 봅시다.</p>
+          <div class="line-practice">${rows.join("")}</div>
+        </section>
+      `;
+    }
+
+    function renderWorksheet() {
+      normalizeSettings();
+      const lines = getLines();
+      const maxBlocks = clampNumber(dom.maxBlocks.value, 1, 18, 8);
+      const selectedLines = lines.slice(0, maxBlocks);
+      const mode = getMode();
+      const opacity = Number(dom.opacityRange.value) / 100;
+      const hasFreeWriting = dom.freeWriting.checked;
+      const freeWritingRows = clampNumber(dom.freeWritingRows.value, 2, 12, 2);
+
+      dom.worksheet.style.setProperty("--practice-font", fontMap[dom.fontChoice.value]);
+      dom.worksheet.style.setProperty("--practice-weight", dom.fontChoice.value === "gothic" ? "700" : "500");
+      dom.worksheet.style.setProperty("--trace-opacity", opacity);
+      dom.worksheet.style.setProperty("--line-height", `${LINE_HEIGHT_MM}mm`);
+      dom.worksheet.style.setProperty("--line-char-size", `${(LINE_HEIGHT_MM * 0.54).toFixed(1)}mm`);
+
+      if (selectedLines.length === 0 && !hasFreeWriting) {
+        dom.worksheet.innerHTML = `
+          ${makeHeader()}
+          <div class="empty-preview">왼쪽 입력 칸에 연습할 단어 또는 문장을 넣어 주세요.</div>
+        `;
+        dom.status.textContent = "연습할 내용을 입력하면 학습지가 만들어집니다.";
+        dom.status.className = "status error";
+        dom.previewSummary.textContent = "입력 대기";
+        return;
+      }
+
+      const repeatCount = clampNumber(dom.repeatCount.value, 1, 8, 3);
+      const blankCount = clampNumber(dom.blankCount.value, 0, 10, 3);
+      const blocks = selectedLines.flatMap((line, index) => {
+        const gridBlock = () => makeGridBlock(line, index, { repeatCount, blankCount });
+        const lineBlock = () => makeLineBlock(line, index, { repeatCount, blankCount });
+        if (mode === "mixed") return [gridBlock(), lineBlock()];
+        return [mode === "grid" ? gridBlock() : lineBlock()];
+      });
+
+      const footer = dom.showFooter.checked
+        ? `<footer class="footer-tip">자기점검: 글자의 크기가 일정한가요? 받침을 빠뜨리지 않았나요? 줄을 벗어나지 않았나요?</footer>`
+        : "";
+      const freeWriting = hasFreeWriting ? makeFreeWritingBlock(mode, freeWritingRows) : "";
+
+      dom.worksheet.innerHTML = `${makeHeader()}${blocks.join("")}${freeWriting}${footer}`;
+
+      const hiddenCount = Math.max(0, lines.length - selectedLines.length);
+      const freeWritingStatus = hasFreeWriting ? ` 자유 문장 ${freeWritingRows}줄을 추가했습니다.` : "";
+      dom.status.textContent = selectedLines.length === 0
+        ? `자유 문장 ${freeWritingRows}줄을 만들었습니다.`
+        : hiddenCount
+          ? `${selectedLines.length}개 문항을 만들었습니다. 남은 ${hiddenCount}개는 문항 수를 늘리면 들어갑니다.${freeWritingStatus}`
+          : `${selectedLines.length}개 문항을 만들었습니다. 글자 크기는 칸에 맞춰 자동 조절됩니다.${freeWritingStatus}`;
+      dom.status.className = "status";
+      dom.previewSummary.textContent = hasFreeWriting
+        ? `A4 인쇄 미리보기 · 문항 ${selectedLines.length}개 · 자유 문장 ${freeWritingRows}줄`
+        : `A4 인쇄 미리보기 · 문항 ${selectedLines.length}개 · 한 줄 최대 15칸`;
+    }
+
+    document.querySelectorAll("[data-preset]").forEach(button => {
+      button.addEventListener("click", () => {
+        dom.practiceText.value = presets[button.dataset.preset].join("\n");
+        renderWorksheet();
+      });
+    });
+
+    dom.randomBtn.addEventListener("click", () => {
+      dom.practiceText.value = pickRandomLines(8).join("\n");
+      renderWorksheet();
+      dom.status.textContent = "저작권 걱정 없이 쓸 수 있는 창작 문장 8개를 넣었습니다.";
+    });
+
+    [
+      dom.sheetTitle,
+      dom.className,
+      dom.studentName,
+      dom.teacherNote,
+      dom.practiceText,
+      dom.fontChoice,
+      dom.repeatCount,
+      dom.blankCount,
+      dom.maxBlocks,
+      dom.opacityRange,
+      dom.showFooter,
+      dom.freeWriting,
+      dom.freeWritingRows
+    ].forEach(control => {
+      control.addEventListener("input", renderWorksheet);
+      control.addEventListener("change", renderWorksheet);
+    });
+
+    document.querySelectorAll('input[name="mode"]').forEach(control => {
+      control.addEventListener("change", renderWorksheet);
+    });
+
+    dom.printBtn.addEventListener("click", () => {
+      renderWorksheet();
+      const originalTitle = document.title;
+      document.title = "";
+      window.print();
+      setTimeout(() => {
+        document.title = originalTitle;
+      }, 500);
+    });
+    dom.clearBtn.addEventListener("click", () => {
+      dom.practiceText.value = "";
+      renderWorksheet();
+      dom.practiceText.focus();
+    });
+
+    renderWorksheet();
+  </script>
+</body>
+</html>
